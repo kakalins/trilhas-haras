@@ -57,23 +57,18 @@
         // 2. Coordenadas e Zoom
         const chaDeCruzCoords = [-7.91195, -35.07705];
         const novoPinCoords = [-7.914422019988148, -35.080009922166];
-        const initialZoom = 18;
+        const initialZoom = 16;
 
         // 3. Inicializa o mapa
         const map = L.map('map').setView(chaDeCruzCoords, initialZoom);
 
         // 4. Adiciona a camada de mapa (tiles) do OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
+            maxZoom: 30,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
         // 5. Adiciona um marcador no local (opcional)
-        L.marker(chaDeCruzCoords).addTo(map)
-            .bindPopup('<b>Haras de Aldeia, Paudalho - PE</b>')
-            .openPopup();
-
-
         const placaIcon = L.icon({
             iconUrl: 'placa.png', // Caminho para a sua imagem
             iconSize:     [50, 50], // Tamanho do ícone em pixels [largura, altura]
@@ -120,7 +115,7 @@
         trilhaOesteCamaroes.bindPopup("Trilha Oeste dos Camarões - 610m");
 
         // Ajusta o zoom para mostrar a trilha inteira, se necessário
-        map.fitBounds(trilhaOesteCamaroes.getBounds().pad(0.1));
+        //map.fitBounds(trilhaOesteCamaroes.getBounds().pad(0.1));
 
     </script>
 
