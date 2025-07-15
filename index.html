@@ -72,7 +72,7 @@
             .bindPopup('<b>Haras de Aldeia, Paudalho - PE</b>')
             .openPopup();
 
-        const trilhaPontos = [
+        const trilhaOesteCamaroesPontos = [
             [-7.914422019988148, -35.080009922166],
             [-7.9142853349997555, -35.07977857239686],
             [-7.914088725641532, -35.07948407508517],
@@ -100,7 +100,7 @@
         ];
 
         // 8. Cria a linha (Polyline) e a adiciona ao mapa
-        const trilha = L.polyline(trilhaPontos, {
+        const trilhaOesteCamaroes = L.polyline(trilhaOesteCamaroesPontos, {
             color: '#8B4513', // Uma cor marrom, parecida com terra
             weight: 5,         // Espessura da linha
             opacity: 0.8,      // Opacidade da linha
@@ -108,10 +108,10 @@
         }).addTo(map);
 
         // Adiciona um popup à trilha
-        trilha.bindPopup("Trilha de 1km (Sudeste)");
+        trilhaOesteCamaroes.bindPopup("Trilha Oeste dos Camarões - 610m");
 
         // Ajusta o zoom para mostrar a trilha inteira, se necessário
-        map.fitBounds(trilha.getBounds().pad(0.1));
+        map.fitBounds(trilhaOesteCamaroes.getBounds().pad(0.1));
 
     </script>
 
