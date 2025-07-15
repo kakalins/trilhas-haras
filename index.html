@@ -56,6 +56,7 @@
 
         // 2. Coordenadas e Zoom
         const chaDeCruzCoords = [-7.91195, -35.07705];
+        const novoPinCoords = [-7.914422019988148, -35.080009922166];
         const initialZoom = 18;
 
         // 3. Inicializa o mapa
@@ -71,6 +72,16 @@
         L.marker(chaDeCruzCoords).addTo(map)
             .bindPopup('<b>Haras de Aldeia, Paudalho - PE</b>')
             .openPopup();
+
+
+        const placaIcon = L.icon({
+            iconUrl: 'placa.png', // Caminho para a sua imagem
+            iconSize:     [50, 50], // Tamanho do ícone em pixels [largura, altura]
+            iconAnchor:   [25, 50], // Ponto do ícone que corresponde à localização no mapa (metade da largura, altura total)
+            popupAnchor:  [0, -50]  // Ponto a partir do qual o popup deve abrir, relativo ao iconAnchor
+        });
+        L.marker(novoPinCoords, {icon: placaIcon}).addTo(map)
+        .bindPopup('<b> Trilha Oeste dos Camarões - 610m! </b><br><img src="camaroes-oeste.jpg" width="220" height="220">');
 
         const trilhaOesteCamaroesPontos = [
             [-7.914422019988148, -35.080009922166],
@@ -95,8 +106,6 @@
             [-7.914431834867766, -35.07653356860985],
             [-7.914365994307251, -35.07630795966744],
             [-7.914335914273451, -35.07597938639024]
-           // chaDeCruzCoords, // Ponto inicial (o pino)
-           // fimTrilhaCoords  // Ponto final (calculado)
         ];
 
         // 8. Cria a linha (Polyline) e a adiciona ao mapa
