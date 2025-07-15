@@ -1,0 +1,21 @@
+{
+  "name": "Mapa Offline Haras de Aldeia",
+  "short_name": "Mapa Haras de Aldeia",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "description": "Mapa offline do Haras de Aldeia em Paudalho usando Leaflet.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Mapa Offline - Chã de Cruz</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#4CAF50"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Mapa Chã Cruz">
+    <link rel="apple-touch-icon" href="icon-512.png">
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Evita barras de rolagem */
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+            background-color: #ddd; /* Cor de fundo enquanto o mapa carrega */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+    <script>
+        // 1. Inicializa o Service Worker para o PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registrado com sucesso:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Falha ao registrar o Service Worker:', error);
+                    });
+            });
+        }
+
+        // 2. Coordenadas e Zoom
+        const chaDeCruzCoords = [-7.91195, -35.07705];
+        const initialZoom = 18;
+
+        // 3. Inicializa o mapa
+        const map = L.map('map').setView(chaDeCruzCoords, initialZoom);
+
+        // 4. Adiciona a camada de mapa (tiles) do OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // 5. Adiciona um marcador no local (opcional)
+        L.marker(chaDeCruzCoords).addTo(map)
+            .bindPopup('<b>Haras de Aldeia, Paudalho - PE</b>')
+            .openPopup();
+
+        const trilhaPontos = [
+            [-7.914422019988148, -35.080009922166],
+            [-7.9142853349997555, -35.07977857239686],
+            [-7.914088725641532, -35.07948407508517],
+            [-7.913937829280133, -35.079197850286754],
+            [-7.91389949554122, -35.078992814655116],
+            [-7.913864534613011, -35.078756093669995],
+            [-7.91381147371303, -35.07859808871254],
+            [-7.913638085086734, -35.07851777424607],
+            [-7.913604512942558, -35.078463928538],
+            [-7.913418729287588, -35.07827700466135],
+            [-7.913245489292684, -35.07814616329592],
+            [-7.913234460202115, -35.07793215622774],
+            [-7.913117192085436, -35.07765162961258],
+            [-7.913172024559638, -35.07722593338189],
+            [-7.91330889250569, -35.07729029208819],
+            [-7.913748221518505, -35.07723238012765],
+            [-7.914183742812937, -35.07727160828259],
+            [-7.914360851768253, -35.07700350279328],
+            [-7.91438241250886, -35.076809448892426],
+            [-7.914431834867766, -35.07653356860985],
+            [-7.914365994307251, -35.07630795966744],
+            [-7.914335914273451, -35.07597938639024]
+           // chaDeCruzCoords, // Ponto inicial (o pino)
+           // fimTrilhaCoords  // Ponto final (calculado)
+        ];
+
+        // 8. Cria a linha (Polyline) e a adiciona ao mapa
+        const trilha = L.polyline(trilhaPontos, {
+            color: '#8B4513', // Uma cor marrom, parecida com terra
+            weight: 5,         // Espessura da linha
+            opacity: 0.8,      // Opacidade da linha
+            dashArray: '10, 10' // Estilo de linha tracejada, para parecer uma trilha
+        }).addTo(map);
+
+        // Adiciona um popup à trilha
+        trilha.bindPopup("Trilha de 1km (Sudeste)");
+
+        // Ajusta o zoom para mostrar a trilha inteira, se necessário
+        map.fitBounds(trilha.getBounds().pad(0.1));
+
+    </script>
+
+</body>
+</html>
