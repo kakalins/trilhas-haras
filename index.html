@@ -30,11 +30,31 @@
             width: 100%;
             background-color: #ddd; /* Cor de fundo enquanto o mapa carrega */
         }
+        #gps-button {
+            position: absolute;
+            top: 80px;
+            left: 10px;
+            z-index: 1000; /* Garante que o botão fique sobre o mapa */
+            padding: 10px;
+            background-color: white;
+            color: #333;
+            border: 2px solid rgba(0,0,0,0.2);
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+        }
+        #gps-button:hover {
+            background-color: #f4f4f4;
+        }
     </style>
 </head>
 <body>
 
     <div id="map"></div>
+
+    <button id="gps-button">Onde estou?</button>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -116,6 +136,100 @@
 
         // Ajusta o zoom para mostrar a trilha inteira, se necessário
         //map.fitBounds(trilhaOesteCamaroes.getBounds().pad(0.1));
+
+        // ==========================================================
+        // NOVO: Lógica para Geolocalização em Tempo Real
+        // ==========================================================
+
+        const gpsButton = document.getElementById('gps-button');
+        let userLocationMarker = null; // Para armazenar o marcador do usuário
+        let userLocationAccuracy = null; // Para armazenar o círculo de precisão
+        let isFirstLocation = true; // Para saber se é a primeira vez que a localização é encontrada
+
+        gpsButton.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                alert('Geolocalização não é suportada pelo seu navegador.');
+                return;
+            }
+
+            // Opções para a geolocalização: alta precisão é essencial
+            const geoOptions = {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            };
+
+            // Inicia o monitoramento da posição
+            // watchPosition atualiza a localização continuamente
+            navigator.geolocation.watchPosition(locationFound, locationError, geoOptions);
+        });
+
+        function locationFound(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+            const userLatLng = [lat, lon];
+            
+            console.log(`Localização encontrada: Lat ${lat}, Lon ${lon}, Precisão ${accuracy}m`);
+
+            // Se o marcador ainda não existe, crie-o
+            if (!userLocationMarker) {
+                // Círculo de precisão
+                userLocationAccuracy = L.circle(userLatLng, {
+                    radius: accuracy,
+                    color: '#136AEC',
+                    fillColor: '#136AEC',
+                    fillOpacity: 0.15,
+                    weight: 2,
+                    opacity: 0.5
+                }).addTo(map);
+                
+                // Marcador central (ponto azul)
+                userLocationMarker = L.circleMarker(userLatLng, {
+                    radius: 8,
+                    fillColor: "#2A93EE",
+                    color: "#FFFFFF",
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                }).addTo(map);
+
+            } else {
+                // Se já existe, apenas atualize a posição e o raio de precisão
+                userLocationMarker.setLatLng(userLatLng);
+                userLocationAccuracy.setLatLng(userLatLng);
+                userLocationAccuracy.setRadius(accuracy);
+            }
+            
+            // Adiciona ou atualiza o popup
+            userLocationMarker.bindPopup(`Você está aqui!<br>Precisão: ${accuracy.toFixed(0)} metros`).openPopup();
+            
+            // Na primeira vez, centraliza o mapa no usuário com um zoom adequado
+            if (isFirstLocation) {
+                map.setView(userLatLng, 17); // Zoom 17 é bom para ver os arredores
+                isFirstLocation = false;
+            }
+        }
+
+        function locationError(error) {
+            let message = '';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    message = 'Você negou o acesso à sua localização.';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    message = 'As informações de localização não estão disponíveis no momento.';
+                    break;
+                case error.TIMEOUT:
+                    message = 'A requisição para obter sua localização demorou demais.';
+                    break;
+                default:
+                    message = 'Ocorreu um erro desconhecido ao obter sua localização.';
+                    break;
+            }
+            alert(message);
+        }
+
 
     </script>
 
