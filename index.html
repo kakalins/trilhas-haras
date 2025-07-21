@@ -189,7 +189,7 @@
             }
             
             isTracking = true;
-            gpsButton.src = "arrowg.png";
+            gpsButton.firstChild.src = "arrowg.png";
 
             const geoOptions = {
                 enableHighAccuracy: true,
@@ -223,6 +223,7 @@
                 }).addTo(map);
                 
                 // Marcador central (ponto azul)
+                //userLocationMarker = L.circleMarker(userLatLng, {
                 userLocationMarker = L.marker(userLatLng, {
                     icon: arrowIcon, 
                     rotationAngle: 0
@@ -270,35 +271,48 @@
         //     alert(message);
         // }
 
-        let smoothedHeading = 0;
-        const smoothingFactor = 0.2; // Valor entre 0.0 e 1.0. Menor = mais suave.
-
+        let lastHeading = 0;
         function handleOrientation(event) {
-            if (!userLocationMarker) return;
-
-            const rawHeading = event.alpha || event.webkitCompassHeading || 0;
-
-            // --- LÓGICA DE SUAVIZAÇÃO (LOW-PASS FILTER) ---
-            // Trata a passagem de 360 para 0 graus e vice-versa
-            let diff = rawHeading - smoothedHeading;
-            if (diff > 180) {
-                diff -= 360;
-            } else if (diff < -180) {
-                diff += 360;
+            // event.alpha é a direção da bússola em graus (0-360)
+            // event.webkitCompassHeading é um fallback para iOS mais antigo
+            const heading = event.alpha || event.webkitCompassHeading || 0;
+            
+            // Para evitar que a seta trema muito, só atualizamos se a mudança for > 3 graus
+            if (userLocationMarker && Math.abs(heading - lastHeading) > 5) {
+                userLocationMarker.setRotationAngle(heading);
+                lastHeading = -heading;
             }
-            
-            // Aplica o filtro
-            smoothedHeading += diff * smoothingFactor;
-            smoothedHeading = (smoothedHeading + 360) % 360; // Garante que o valor fique entre 0 e 360
-            
-            // CORREÇÃO 1: Inverte o ângulo para a rotação correta
-            // Usa o novo valor suavizado (smoothedHeading)
-            userLocationMarker.setRotationAngle(-smoothedHeading);
         }
+
+        // let smoothedHeading = 0;
+        // const smoothingFactor = 0.2; // Valor entre 0.0 e 1.0. Menor = mais suave.
+
+        // function handleOrientation(event) {
+        //     if (!userLocationMarker) return;
+
+        //     const rawHeading = event.alpha || event.webkitCompassHeading || 0;
+
+        //     // --- LÓGICA DE SUAVIZAÇÃO (LOW-PASS FILTER) ---
+        //     // Trata a passagem de 360 para 0 graus e vice-versa
+        //     let diff = rawHeading - smoothedHeading;
+        //     if (diff > 180) {
+        //         diff -= 360;
+        //     } else if (diff < -180) {
+        //         diff += 360;
+        //     }
+            
+        //     // Aplica o filtro
+        //     smoothedHeading += diff * smoothingFactor;
+        //     smoothedHeading = (smoothedHeading + 360) % 360; // Garante que o valor fique entre 0 e 360
+            
+        //     // CORREÇÃO 1: Inverte o ângulo para a rotação correta
+        //     // Usa o novo valor suavizado (smoothedHeading)
+        //     userLocationMarker.setRotationAngle(-smoothedHeading);
+        // }
 
         function locationError(error) {
             isTracking = false;
-            gpsButton.src = "arrowr.png";
+            gpsButton.firstChild.src = "arrowr.png";
             alert(`Erro de localização: ${error.message}`);
         }
 
