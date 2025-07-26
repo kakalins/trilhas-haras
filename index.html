@@ -82,7 +82,9 @@
 
         // 2. Coordenadas e Zoom
         const chaDeCruzCoords = [-7.91195, -35.07705];
-        const novoPinCoords = [-7.914422019988148, -35.080009922166];
+        const camaroesOestePinCoords = [-7.914422019988148, -35.080009922166];
+        const douradosLestePinCoords = [-7.915295863357224, -35.079483713329175];
+        const douradosOestePinCoords = [-7.915792735028551, -35.08083435260798];
         const initialZoom = 16;
 
         // 3. Inicializa o mapa
@@ -101,8 +103,13 @@
             iconAnchor:   [25, 50], // Ponto do ícone que corresponde à localização no mapa (metade da largura, altura total)
             popupAnchor:  [0, -50]  // Ponto a partir do qual o popup deve abrir, relativo ao iconAnchor
         });
-        L.marker(novoPinCoords, {icon: placaIcon}).addTo(map)
+
+        L.marker(camaroesOestePinCoords, {icon: placaIcon}).addTo(map)
         .bindPopup('<b> Trilha Oeste dos Camarões - 610m! </b><br><img src="camaroes-oeste.jpg" width="220" height="220">');
+        L.marker(douradosLestePinCoords, {icon: placaIcon}).addTo(map)
+        .bindPopup('<b> Trilha Leste dos Dourados - 672m! </b><br><img src="camaroes-oeste.jpg" width="220" height="220">');
+        L.marker(douradosOestePinCoords, {icon: placaIcon}).addTo(map)
+        .bindPopup('<b> Trilha Oeste dos Dourados - 394m! </b><br><img src="camaroes-oeste.jpg" width="220" height="220">');
 
         const trilhaOesteCamaroesPontos = [
             [-7.914422019988148, -35.080009922166],
@@ -129,6 +136,46 @@
             [-7.914335914273451, -35.07597938639024]
         ];
 
+        const trilhaOesteDuradosPontos = [
+            [-7.918785185821237, -35.08100728906864],
+            [-7.918093520690892, -35.08089672790122],
+           // [-7.918131616975866, -35.080834293087776],
+            [-7.917631562052884, -35.081085181185335],
+         //   [-7.91723293797676, -35.08105241281585],
+         //   [-7.916714133620923, -35.081073858403514],
+            [-7.916724801084964, -35.08106310364811],
+            [-7.9163242921170465, -35.08094511099967],
+            [-7.916019841832695, -35.080867233792425],
+            [-7.915803614342615, -35.08083434260622],
+            [-7.915792735028551, -35.08083435260798],
+        ]
+
+        const trilhaLesteDouradosPontos = [
+            [-7.915295863357224, -35.079483713329175],
+            [-7.915558259283986, -35.07966722886354],
+            [-7.915685876971007, -35.07994082659452],
+            [-7.916012225066947, -35.08004003176021],
+            [-7.916153267344832, -35.08003712721854],
+            [-7.9161839533669225, -35.08016339280147],
+            [-7.916412032907205, -35.08029652643772],
+            [-7.916892733817004, -35.08034043364668],
+            [-7.91723350600011, -35.080349411895654],
+            [-7.9178604706446105, -35.08023038503728],
+            [-7.9179805004213994, -35.08011890336263],
+            [-7.917945625320458, -35.07984205126814],
+            [-7.917787201934941, -35.07960719083209],
+            [-7.9177868210732845, -35.07943912139856],
+            [-7.9177961408516415, -35.07944851397844],
+            [-7.917969669616003, -35.07933594855271],
+            [-7.918208173815761, -35.07932641965849],
+            [-7.9183768414292794, -35.079476250964056],
+            [-7.918544357412383, -35.07970276354599],
+            [-7.918690475149616, -35.08011742033677],
+            [-7.918804447303332, -35.08022161972281],
+            [-7.918992155469912, -35.08028819910631],
+            [-7.919218640939088, -35.08027408436088]
+        ]
+
         // 8. Cria a linha (Polyline) e a adiciona ao mapa
         const trilhaOesteCamaroes = L.polyline(trilhaOesteCamaroesPontos, {
             color: '#8B4513', // Uma cor marrom, parecida com terra
@@ -137,8 +184,24 @@
             dashArray: '10, 10' // Estilo de linha tracejada, para parecer uma trilha
         }).addTo(map);
 
+        const trilhaOesteDurados = L.polyline(trilhaOesteDuradosPontos, {
+            color: '#8B4513', // Uma cor marrom, parecida com terra
+            weight: 5,         // Espessura da linha
+            opacity: 0.8,      // Opacidade da linha
+            dashArray: '10, 10' // Estilo de linha tracejada, para parecer uma trilha
+        }).addTo(map);
+
+        const trilhaLesteDourados = L.polyline(trilhaLesteDouradosPontos, {
+            color: '#8B4513', // Uma cor marrom, parecida com terra
+            weight: 5,         // Espessura da linha
+            opacity: 0.8,      // Opacidade da linha
+            dashArray: '10, 10' // Estilo de linha tracejada, para parecer uma trilha
+        }).addTo(map);
+
         // Adiciona um popup à trilha
         trilhaOesteCamaroes.bindPopup("Trilha Oeste dos Camarões - 610m");
+        trilhaOesteDurados.bindPopup("Trilha Oeste dos Dourados - 394m");
+        trilhaLesteDourados.bindPopup("Trilha Leste dos Dourados - 672m");
 
         // Ajusta o zoom para mostrar a trilha inteira, se necessário
         //map.fitBounds(trilhaOesteCamaroes.getBounds().pad(0.1));
